@@ -86,7 +86,7 @@ public class AuthService {
         if (!roleAssigned){
             throw new UserRegistrationException("🔴 AuthService - Cannot assign role to new user: "+ email);
         }
-
+//
         String subject = "Welcome to Study Trek!";
         String body = "<html>" +
                         "<body>" +
@@ -97,7 +97,7 @@ public class AuthService {
                         "<p>Best Regards,<br>The Study Trek Team</p>" +
                         "</body>" +
                         "</html>";
-        mailSenderService.sendNewMail(email, subject, body);
+       // mailSenderService.sendNewMail(email, subject, body);
         return roleAssigned;
     }
 

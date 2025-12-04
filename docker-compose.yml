@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # Servizio MongoDB
+  mongodb:
+    image: mongo:latest
+    container_name: study-trek-mongo
+    ports:
+      # Mappa la porta locale 27017 alla porta del container 27017
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+  # Servizio MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: study-trek-mysql
+    environment:
+      # Corrispondono ai valori in application.properties
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: study_trek
+      MYSQL_USER: newuser
+      MYSQL_PASSWORD: 123
+    ports:
+      # Mappa la porta locale 3306 alla porta del container 3306
+      - "3306:3306"
+        # *** AGGIUNGI QUESTO PER RISOLVERE L'ERRORE DI AUTENTICAZIONE ***
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+volumes:
+  mongo_data:
+  mysql_data:
