@@ -1,6 +1,9 @@
 package vttp.proj2.backend.repositories;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +46,14 @@ public class UserRepository {
             acc.setEmail(rs.getString("email"));
             acc.setPasswordHash(rs.getString("passwordHash"));
             acc.setRole(userRole);
-            acc.setLastPasswordResetDate(rs.getDate("lastPasswordResetDate"));
+            //modifica Davide Annicchiarico
+            // Gestione robusta del campo data/ora con conversione da LocalDateTime a vecchio Date
+            java.sql.Timestamp ts = rs.getTimestamp("lastPasswordResetDate");
+            if (ts != null) {
+                acc.setLastPasswordResetDate(new java.util.Date(ts.getTime()));
+            } else {
+                acc.setLastPasswordResetDate(null);
+            }
             acc.setFirstName(rs.getString("firstName"));
             acc.setLastName(rs.getString("lastName"));
             acc.setProfilePicUrl(rs.getString("profilePicUrl"));
@@ -68,7 +78,15 @@ public class UserRepository {
             acc.setEmail(rs.getString("email"));
             acc.setPasswordHash(rs.getString("passwordHash"));
             acc.setRole(userRole);
-            acc.setLastPasswordResetDate(rs.getDate("lastPasswordResetDate"));
+            //modifica Davide Annicchiarico
+            // Gestione robusta del campo data/ora con conversione da LocalDateTime a vecchio Date
+            java.sql.Timestamp ts = rs.getTimestamp("lastPasswordResetDate");
+            if (ts != null) {
+                // Converte il Timestamp in java.util.Date (assumendo AccountInfo lo utilizzi)
+                acc.setLastPasswordResetDate(new java.util.Date(ts.getTime()));
+            } else {
+                acc.setLastPasswordResetDate(null);
+            }
             acc.setFirstName(rs.getString("firstName"));
             acc.setLastName(rs.getString("lastName"));
             acc.setProfilePicUrl(rs.getString("profilePicUrl"));
