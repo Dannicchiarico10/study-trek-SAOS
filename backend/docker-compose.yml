@@ -25,8 +25,8 @@ services:
     ports:
       # Mappa la porta locale 3306 alla porta del container 3306
       - "3306:3306"
-        # *** AGGIUNGI QUESTO PER RISOLVERE L'ERRORE DI AUTENTICAZIONE ***
     volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sq
       - mysql_data:/var/lib/mysql
     restart: always
 

@@ -48,16 +48,27 @@ public class UserRepository {
             acc.setRole(userRole);
             //modifica Davide Annicchiarico
             // Gestione robusta del campo data/ora con conversione da LocalDateTime a vecchio Date
-            java.sql.Timestamp ts = rs.getTimestamp("lastPasswordResetDate");
-            if (ts != null) {
-                acc.setLastPasswordResetDate(new java.util.Date(ts.getTime()));
+            Object dateObject = rs.getObject("lastPasswordResetDate");
+
+            if (dateObject != null) {
+                if (dateObject instanceof LocalDateTime localDateTime) {
+                    // Conversione sicura: LocalDateTime -> Instant -> java.util.Date
+                    Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                    acc.setLastPasswordResetDate(date);
+                } else if (dateObject instanceof java.sql.Timestamp ts) {
+                    // Fallback (se il driver restituisse ancora Timestamp, per sicurezza)
+                    acc.setLastPasswordResetDate(new java.util.Date(ts.getTime()));
+                } else {
+                    // Se il tipo non è nessuno dei due
+                    acc.setLastPasswordResetDate(null);
+                }
             } else {
                 acc.setLastPasswordResetDate(null);
             }
             acc.setFirstName(rs.getString("firstName"));
             acc.setLastName(rs.getString("lastName"));
             acc.setProfilePicUrl(rs.getString("profilePicUrl"));
-            acc.setFriendIds(getAllFriends(acc.getUserId()));
+            //acc.setFriendIds(getAllFriends(acc.getUserId()));
             acc.setRegisteredCourses(getAllRegisteredCoursesForUser(acc.getUserId()));
             acc.setInterests(getUserInterests(acc.getUserId()));
             return acc;
@@ -80,17 +91,27 @@ public class UserRepository {
             acc.setRole(userRole);
             //modifica Davide Annicchiarico
             // Gestione robusta del campo data/ora con conversione da LocalDateTime a vecchio Date
-            java.sql.Timestamp ts = rs.getTimestamp("lastPasswordResetDate");
-            if (ts != null) {
-                // Converte il Timestamp in java.util.Date (assumendo AccountInfo lo utilizzi)
-                acc.setLastPasswordResetDate(new java.util.Date(ts.getTime()));
+            Object dateObject = rs.getObject("lastPasswordResetDate");
+
+            if (dateObject != null) {
+                if (dateObject instanceof LocalDateTime localDateTime) {
+                    // Conversione sicura: LocalDateTime -> Instant -> java.util.Date
+                    Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                    acc.setLastPasswordResetDate(date);
+                } else if (dateObject instanceof java.sql.Timestamp ts) {
+                    // Fallback (se il driver restituisse ancora Timestamp, per sicurezza)
+                    acc.setLastPasswordResetDate(new java.util.Date(ts.getTime()));
+                } else {
+                    // Se il tipo non è nessuno dei due
+                    acc.setLastPasswordResetDate(null);
+                }
             } else {
                 acc.setLastPasswordResetDate(null);
             }
             acc.setFirstName(rs.getString("firstName"));
             acc.setLastName(rs.getString("lastName"));
             acc.setProfilePicUrl(rs.getString("profilePicUrl"));
-            acc.setFriendIds(getAllFriends(acc.getUserId()));
+            //acc.setFriendIds(getAllFriends(acc.getUserId()));
             acc.setRegisteredCourses(getAllRegisteredCoursesForUser(acc.getUserId()));
             acc.setInterests(getUserInterests(acc.getUserId()));
             return acc;

@@ -141,5 +141,5 @@ ADD COLUMN telegram_user_id BIGINT;
 ALTER TABLE user_info
 ADD COLUMN linkCode VARCHAR(255);
 
-grant all privileges on study_trek.* to 'newuser'@'%';
-flush privileges;
+/*grant all privileges on study_trek.* to 'newuser'@'%';
+flush privileges;*/
