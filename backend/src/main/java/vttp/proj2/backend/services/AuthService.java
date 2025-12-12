@@ -28,9 +28,6 @@ public class AuthService {
     @Autowired
     private MailSenderService mailSenderService; 
 
-    public void UserService(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public String hashPassword(String rawPassword) {
         String hashedPassword = passwordEncoder.encode(rawPassword);
@@ -44,9 +41,11 @@ public class AuthService {
     public boolean authenticateLogin(String email, String rawPassword){
         boolean emailExists = authRepo.checkEmailExists(email);
         if (!emailExists) return false;
+
         String passwordHash = authRepo.getHashedPasswordByEmail(email);
-        boolean isAuthenticated = checkPassword(rawPassword, passwordHash);
-        return isAuthenticated;
+
+        // Alleggerimento metodo di autenticazione
+        return passwordEncoder.matches(rawPassword, passwordHash);
     }
 
     //change password
