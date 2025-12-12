@@ -45,9 +45,11 @@ public class SecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
-                        // auth.requestMatchers("/**").permitAll()
-                        //         .anyRequest().authenticated()
-                        auth.requestMatchers("/", "/api/auth/login", "/api/auth/register", "/api/courses/**", "/api/course/**").permitAll()
+                        // Consentiti solo Login, Registrazione e la pagina iniziale (/)
+                        auth.requestMatchers("/", "/api/auth/login", "/api/auth/register").permitAll()
+
+                                // NOTA: I percorsi /api/courses/** e /api/course/** sono stati rimossi da permitAll().
+                                // Ora richiederanno un token JWT valido grazie a:
                                 .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsSvc)
