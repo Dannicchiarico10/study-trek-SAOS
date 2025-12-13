@@ -43,19 +43,16 @@ public class SecurityConfig{
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
-                        // Consentiti solo Login, Registrazione e la pagina iniziale (/)
                         auth.requestMatchers("/", "/api/auth/login", "/api/auth/register").permitAll()
-
-                                // NOTA: I percorsi /api/courses/** e /api/course/** sono stati rimossi da permitAll().
-                                // Ora richiederanno un token JWT valido grazie a:
-                                .anyRequest().authenticated()
+                                .anyRequest().authenticated() // Proteggi tutti gli altri endpoint
                 )
-                .userDetailsService(userDetailsSvc)
+                // Rimosso .userDetailsService(userDetailsSvc)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(Customizer.withDefaults())
+                // Rimosso .httpBasic(Customizer.withDefaults())
                 .build();
     }
     @Bean
