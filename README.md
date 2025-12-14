@@ -84,3 +84,85 @@ mvn spring-boot:run
 
 ### Image Credits
 - Illustrations by Camilo Huinca: [Profile](https://agentpekka.com/artist/camilo-huinca/)
+
+---
+# Modifiche effettuate da Dannicchiarico10
+
+## Prerequisiti aggiuntivi
+- Mongo.db
+- MySQL
+- Docker
+### Frontend Setup
+Avvio del Frontend (Angular)Questa applicazione frontend è stata generata con Angular CLI e si connette al server backend (Spring Boot) in esecuzione sulla porta 8080.
+
+### Prerequisiti
+Assicurati che i seguenti strumenti siano installati sul tuo sistema:
+- Node.js e NPM: La versione LTS (Long-Term Support) è consigliata.
+- Angular CLI: Lo strumento a riga di comando di Angular.
+- Backend: Il servizio Docker (MySQL/MongoDB) e il server Spring Boot devono essere già in esecuzione.
+
+### Installazione delle Dipendenze:
+
+Installa Angular CLI a livello globale (solo la prima volta):
+```bash
+npm install -g @angular/cli
+```
+Naviga nella directory del frontend:
+```Bash
+cd C:\Users\User\Desktop\study-trek\frontend
+```
+Installa le dipendenze del progetto:
+```Bash
+npm install
+```
+3. Avvio del Server di Sviluppo. Esegui il comando ng serve per avviare il server di sviluppo Angular.
+   Bash
+   ng serve
+
+#### Accesso: 
+Una volta che la compilazione è completata, apri il tuo browser e naviga su:
+```Bash
+http://localhost:4200/
+```
+## Modifiche
+### In UserRepository:
+Convertito l'import dei DB da TimeStamp a DateTime
+
+### In Application.properties:
+
+Sono state rimosse le chiavi placeholder in chiaro e inserite all'interno di un file
+```Bash
+.env
+```
+Aggiunte le configurazione del DB MySQL in locale:
+```Bash
+# --- MySQL ---
+spring.datasource.url=jdbc:mysql://localhost:3306/study_trek?useSSL=false&allowPublicKeyRetrieval=true&useJDBCCompliantTimezoneShift=true
+spring.datasource.username=newuser
+spring.datasource.password=123
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+```
+Fatto in modo che si accettino richieste solo dall'origine del frontend:
+```Bash
+app.cors.allowed-origin=http://localhost:4200
+```
+A livello di Endpoint ora 
+### In SecurityConfig.java
+È stato rimosso:
+```Bash
+/api/courses/**
+``` 
+Ora sono accessibili a tutti solo gli Endpoint delle Api:
+- Auth per login e registrazione
+- telegram per l'integrazione con il bot Telegram
+
+Tutti gli altri endpoint richiedono un utente autenticato e un token valido.
+
+Il controllo ora avviene nel Service Layer (Directory Services) prima di eseguire una qualsiasi operazione di scrittura o modifica nel DB. In ordine:
+1. Il Service recupera l'ID dell'utente autenticato (il Principal) dal SecurityContextHolder.
+2. Il Service recupera la risorsa (es. Nota, Evento) dal database.
+3. Viene eseguito un confronto tra il userId della risorsa e l'ID dell'utente autenticato.
+
+### Livello DB per MySQL
+È stato creato il file "schema.sql" per avere in modo automatizzato la creazione delle tabelle all'interno del DB MySQL chiamato "study_trek" in localhost.
+Basterà eseguire il file sul DB per create tutte le tabelle necessarie.
