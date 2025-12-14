@@ -36,11 +36,5 @@ ENV PORT=8080
 
 EXPOSE ${PORT}
 
-#place any access key variables here
-ENV UDEMY_CLIENT_ID=
-ENV UDEMY_CLIENT_SECRET=
-ENV JWT_KEY_SECRET=
-ENV SPRING_DATA_MONGODB_URI=
-
 # Run the program
 ENTRYPOINT SERVER_PORT=${PORT} java -jar app.jar

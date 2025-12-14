@@ -2,6 +2,7 @@ package vttp.proj2.backend.config;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.List;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,9 @@ public class SecurityConfig{
     @Value("${jwt.key.secret}")
     private String secretKey;
 
+    @Value("${app.cors.allowed-origin}")
+    private String allowedOrigin;
+
     @Bean
     public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withSecretKey(new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA256")).build();
@@ -40,59 +44,39 @@ public class SecurityConfig{
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                // 1. CONFIGURAZIONE CORS STRETTA: Aggiunta la sorgente di configurazione CORS
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                .authorizeHttpRequests(auth ->
-                        // Consentiti solo Login, Registrazione e la pagina iniziale (/)
-                        auth.requestMatchers("/", "/api/auth/login", "/api/auth/register").permitAll()
+                .csrf(csrf -> csrf.disable())
 
-                                // Tutti gli altri endpoint richiedono un JWT valido
-                                .anyRequest().authenticated()
-                )
-
-                // 2. CONFIGURAZIONE RESOURCE SERVER: Abilita JWT Bearer token authentication
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-
-                // 3. CONFIGURAZIONE STATELESS: Disabilita le sessioni HTTP
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // NOTA: Rimosso .userDetailsService(userDetailsSvc) e .httpBasic(Customizer.withDefaults())
-                // perché non sono necessari per un Resource Server basato su JWT stateless.
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/telegram/**").permitAll()
+                        .requestMatchers("/static/**", "/images/**").permitAll()
+                        .anyRequest().authenticated()
+                )
                 .build();
     }
 
-    // --- BEAN PER LA CONFIGURAZIONE CORS STRETTA ---
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Specifica le ORIGINI del tuo frontend (dove si trova la tua applicazione client)
-        // Devi cambiare 'http://localhost:4200' con l'URL del tuo frontend in produzione!
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://127.0.0.1:4200")); // AGGIUNGI QUI IL TUO DOMINIO DI PRODUZIONE
+        configuration.setAllowedOrigins(List.of(allowedOrigin));
 
-        // I metodi consentiti
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
-        // Gli header consentiti (Authorization è cruciale per inviare il JWT)
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control"));
+        configuration.setAllowedHeaders(List.of("*"));
 
-        // Consente al frontend di inviare credenziali (come i cookies, anche se non usati con JWT)
         configuration.setAllowCredentials(true);
 
-        // Età massima della pre-flight request (buona pratica)
-        configuration.setMaxAge(3600L);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Applica questa configurazione a TUTTI i percorsi
         source.registerCorsConfiguration("/**", configuration);
-
         return source;
     }
-    // ------------------------------------------------
 
     @Bean
     public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
