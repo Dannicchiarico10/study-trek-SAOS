@@ -4,35 +4,7 @@
   <img src="frontend/src/assets/logo-studytrek.png" alt="Study Trek Logo" width="50" style="vertical-align:middle;">
 </p>
 
-Study Trek is an educational platform designed to help users navigate their learning journey efficiently. Built with Angular for the frontend and Spring Boot for the backend, we offer a robust solution for managing courses across various education platforms and study materials. We foster a community-centric approach, allowing users to add friends and engage in discussions via a forum, promoting collaborative learning.
-
-## Table of Contents
-- [Main Features](#main-features)
-- [Premium Membership](#premium-membership)
-- [Security Features](#security-features)
-- [Usage](#usage)
-- [Technologies](#technologies)
-- [Image Credits](#image-credits)
-
-## Main Features
-- **🔎 Course Search**: Gain access to 50,000+ courses from Udemy and Coursera in tech, design, and business, all in one place. 
-- **💻 Study Hub Forum**: Engage in discussions with a community of learners.
-- **👭 Find Your Friends**: If you want to go far, go together; add friends to see what they're learning.
-- **💯 Progress Tracker**: Check off lectures to track course progress.
-- **📝 Note Taker**: Add personalised notes for all courses taken.
-- **🗓️ Interactive Calendar**: Plan and schedule study sessions and course deadlines efficiently.
-- **🌚 Dark Mode Toggle**: Alleviating eye strain 👀. Also, it just looks better.
-- **💳 Stripe Integration**: Make payments safely and securely using Stripe API. 
-
-## Premium Features
-- **🤖 AI Course Navigator**: Get personalised course recommendations powered by OpenAI.
-- **💬 Study Buddy Telegram Bot**: A bot to send reminders and for accessing Course Navigator at your fingertips.
-
-## Security and Performance Features
-- **Authentication and Authorization**: Utilizes JWT for secure authentication and authorization to protect user sessions and sensitive data.
-- **Data Encryption**: Sensitive user data is encrypted using hashing to ensure privacy and security.
-- **Caffine Cache**: High-performance caching library to reduce calls to external APIs, improving loading times and app performance.
-
+Study Trek è una piattaforma E-Learning progettata per aiutare gli utenti a gestire in modo efficiente il loro percorso di apprendimento. Sviluppato con Angular per il frontend e Spring Boot per il backend, offre una soluzione solida per la gestione di corsi su diverse piattaforme didattiche e materiali di studio. Promuove un approccio incentrato sulla comunità, consentendo agli utenti di aggiungere amici e di partecipare alle discussioni tramite un forum, promuovendo l'apprendimento collaborativo.
 
 ## Screenshots
 <p align="left">
@@ -63,45 +35,81 @@ Study Trek is an educational platform designed to help users navigate their lear
   <img src="frontend/src/assets/screenshot-7.png" alt="Study Trek Logo" width="700" style="vertical-align:middle;">
 </p>
 
-## Usage 
+---
+# Modifiche effettuate da Dannicchiarico10
 
-### Prerequisites
-- Node.js
-- Angular CLI
+## Utilizzo e Installazione
+
+### Prerequisiti
+Assicurati che i seguenti strumenti siano installati sul tuo sistema:
 - Java JDK 11+
 - Maven
+- Node.js & NPM (Versione LTS raccomandata)
+- Angular CLI (npm install -g @angular/cli)
+- Docker (Per i servizi database)
+- MySQL (Server in esecuzione)
+- MongoDB (Server in esecuzione)
 
+---
 ### Backend Setup
+#### Configurazione del Database (MySQL)
+Prima di avviare il backend, devi configurare il database MySQL:
+1. Assicurati che il tuo server MySQL sia in **esecuzione** su localhost:3306.
+2. **Crea il Database**: Crea un database vuoto denominato study_trek.
+3. **Inizializzazione Tabelle**: Esegui il file schema.sql (presente nella directory del backend) sul database study_trek per creare tutte le tabelle necessarie.
+
+Nota: Le credenziali di connessione di default (newuser/123) sono definite in application.properties.
+
+Inoltre, prima di eseguire il backend sarà necessario creare un file .env nella directory "backend":
+```bash
+# ====================================================================
+# CONFIGURAZIONI API ESTERNE (Segreti)
+# ====================================================================
+
+# UDEMY
+UDEMY_CLIENT_ID=il-tuo-client-id-udemy
+UDEMY_CLIENT_SECRET=il-tuo-client-secret-udemy
+
+# JWT (SICUREZZA)
+JWT_SECRET_KEY=CHIAVE-SEGRETA-CASUALE
+
+# OPENAI
+OPENAI_API_KEY=la-tua-chiave-openai
+
+# STRIPE
+STRIPE_SECRET_KEY=sk_live_la-tua-chiave-live
+STRIPE_SECRET_TEST=sk_test_la-tua-chiave-test
+
+# AWS S3
+AWS_S3_SECRET_KEY=Il-tuo-segreto-AWS
+AWS_S3_ACCESS_KEY=La-tua-chiave-di-accesso-AWS
+
+# TELEGRAM BOT
+TELEGRAM_BOT_TOKEN=il-token-reale-del-bot
+TELEGRAM_BOT_USERNAME=nome-utente-bot-reale
+
+# ====================================================================
+# CONFIGURAZIONI MAIL (Segreti)
+# ====================================================================
+
+SPRING_MAIL_USERNAME=tuonomeutente@example.com
+SPRING_MAIL_PASSWORD=la-tua-password-smtp
+```
+Successivamente per eseguire il backend ci sono due modalità,
+1. da terminale:
 ```bash
 cd backend
 mvn spring-boot:run
 ```
+2. Oppure se si apre il progetto in un IDE, come IntelliJ-IDE eseguire:
+```bash
+BackendApplication
+```
 
-### Technologies
-- **Tailwind CSS**: [Visit Tailwind CSS](https://tailwindcss.com/)
-- **Angular Material**: [Visit Angular Material](https://material.angular.io/)
-- **DaisyUI**: [Visit DaisyUI](https://daisyui.com/)
-
-### Image Credits
-- Illustrations by Camilo Huinca: [Profile](https://agentpekka.com/artist/camilo-huinca/)
-
----
-# Modifiche effettuate da Dannicchiarico10
-
-## Prerequisiti aggiuntivi
-- Mongo.db
-- MySQL
-- Docker
 ### Frontend Setup
-Avvio del Frontend (Angular)Questa applicazione frontend è stata generata con Angular CLI e si connette al server backend (Spring Boot) in esecuzione sulla porta 8080.
+Avvio del Frontend (Angular). Questa applicazione frontend è stata generata con Angular CLI e si connette al server backend (Spring Boot) in esecuzione sulla porta 8080.
 
-### Prerequisiti
-Assicurati che i seguenti strumenti siano installati sul tuo sistema:
-- Node.js e NPM: La versione LTS (Long-Term Support) è consigliata.
-- Angular CLI: Lo strumento a riga di comando di Angular.
-- Backend: Il servizio Docker (MySQL/MongoDB) e il server Spring Boot devono essere già in esecuzione.
-
-### Installazione delle Dipendenze:
+#### Installazione delle Dipendenze:
 
 Installa Angular CLI a livello globale (solo la prima volta):
 ```bash
@@ -109,22 +117,32 @@ npm install -g @angular/cli
 ```
 Naviga nella directory del frontend:
 ```Bash
-cd C:\Users\User\Desktop\study-trek\frontend
+cd ...\study-trek\frontend
 ```
 Installa le dipendenze del progetto:
 ```Bash
 npm install
 ```
 3. Avvio del Server di Sviluppo. Esegui il comando ng serve per avviare il server di sviluppo Angular.
-   Bash
+```Bash
    ng serve
-
-#### Accesso: 
+```
+#### Accesso:
 Una volta che la compilazione è completata, apri il tuo browser e naviga su:
 ```Bash
 http://localhost:4200/
 ```
+---
+## Dettagli sulla Sicurezza e Sviluppo
+- **Autenticazione and Autorizzazione**: Utilizza JWT per l'autenticazione e l'autorizzazione sicura per proteggere le sessioni utente e i dati sensibili. È stato disabilitato CSRF.
+- **Data Encryption**: I dati sensibili degli utenti vengono crittografati tramite hashing (BCrypt) per garantire privacy e sicurezza.
+- **CORS Stretto**: Accetta richieste solo dal frontend, come definito nelle modifiche in application.properties
+- **Accesso agli Endpoint**: Solo i percorsi di autenticazione e al bot di telegram sono state lasciate accessibili a tutti, gli altri endpoint richiedono un utente autenticato e un token JWT valido.
+- **Prevenzione da SQL Injection**: Tutte le interazioni con MySQL utilizzano Prepared Statements (Query Parametrizzate) tramite JdbcTemplate e Spring Data. La concatenazione di stringhe per la costruzione di query SQL è vietata.
+
+---
 ## Modifiche
+
 ### In UserRepository:
 Convertito l'import dei DB da TimeStamp a DateTime
 
@@ -147,11 +165,13 @@ Fatto in modo che si accettino richieste solo dall'origine del frontend:
 app.cors.allowed-origin=http://localhost:4200
 ```
 A livello di Endpoint ora 
+
 ### In SecurityConfig.java
 È stato rimosso:
 ```Bash
 /api/courses/**
 ``` 
+
 Ora sono accessibili a tutti solo gli Endpoint delle Api:
 - Auth per login e registrazione
 - telegram per l'integrazione con il bot Telegram
@@ -163,6 +183,31 @@ Il controllo ora avviene nel Service Layer (Directory Services) prima di eseguir
 2. Il Service recupera la risorsa (es. Nota, Evento) dal database.
 3. Viene eseguito un confronto tra il userId della risorsa e l'ID dell'utente autenticato.
 
-### Livello DB per MySQL
-È stato creato il file "schema.sql" per avere in modo automatizzato la creazione delle tabelle all'interno del DB MySQL chiamato "study_trek" in localhost.
-Basterà eseguire il file sul DB per create tutte le tabelle necessarie.
+Aggiunta del Password Encoder tramite BCrypt:
+```Bash
+@Bean
+public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+```
+### In SecurityTokenService.java
+È stata configurata la durata del token JWT generato da un giorno ad un'ora:
+```Bash
+.withExpiresAt(now.plus(1, ChronoUnit.HOURS))
+```
+---
+
+## Tecnologie Utilizzate
+### Backend (Spring boot)
+- **Linguaggio**: Java (JDK 11+)
+- **Framework**: Spring Boot, Spring Security
+- **Database**: MySQL (Relazionale), MongoDB (Documentale)
+- **Gestione Progetto**: Maven
+
+### Frontend (Angular)
+- **Tailwind CSS**: [Visit Tailwind CSS](https://tailwindcss.com/)
+- **Angular Material**: [Visit Angular Material](https://material.angular.io/)
+- **DaisyUI**: [Visit DaisyUI](https://daisyui.com/)
+- **Gestione Dipendenze**: NPM
+- **Accesso**: http://localhost:4200/
+
+### Image Credits
+- Illustrations by Camilo Huinca: [Profile](https://agentpekka.com/artist/camilo-huinca/)
