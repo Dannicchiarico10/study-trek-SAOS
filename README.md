@@ -37,6 +37,10 @@ Study Trek è una piattaforma E-Learning progettata per aiutare gli utenti a ges
 
 ---
 # Modifiche effettuate da Dannicchiarico10
+## Architettura
+<p align="left">
+  <img src="frontend/src/assets/Architettura.png" alt="Study Trek Logo" width="700" style="vertical-align:middle;">
+</p>
 
 ## Utilizzo e Installazione
 
@@ -111,19 +115,19 @@ Avvio del Frontend (Angular). Questa applicazione frontend è stata generata con
 
 #### Installazione delle Dipendenze:
 
-Installa Angular CLI a livello globale (solo la prima volta):
+1. Installa Angular CLI a livello globale (solo la prima volta):
 ```bash
 npm install -g @angular/cli
 ```
-Naviga nella directory del frontend:
+2. Naviga nella directory del frontend:
 ```Bash
 cd ...\study-trek\frontend
 ```
-Installa le dipendenze del progetto:
+3. Installa le dipendenze del progetto:
 ```Bash
 npm install
 ```
-3. Avvio del Server di Sviluppo. Esegui il comando ng serve per avviare il server di sviluppo Angular.
+4. Avvio del Server di Sviluppo. Esegui il comando ng serve per avviare il server di sviluppo Angular.
 ```Bash
    ng serve
 ```
